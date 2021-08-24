@@ -13,28 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppointmentController {
 	@Autowired
-	AppointmentService appointmentService;
-	
+	private AppointmentRepository appointmentRepository;
+
 	@PostMapping("/placeAppointment")
 	private void placeAppointment(@RequestBody Appointment appointment) {
-		appointmentService.save(appointment);
+		appointmentRepository.save(appointment);
 	}
-	
-	@GetMapping("/appointments/{id}")
-	public Appointment getUser(@PathVariable Integer id){
-		Optional<Appointment> app = appointmentService.getAppointmentById(id);
-		if(app.isPresent()) {
-			Appointment dummy = app.get();
-			System.out.println(dummy.getUser_name());
-			return dummy;
-			
-		}
-		else {
-			System.out.println("No id found");
-			
-		}
-		return null;
+
+	@GetMapping("/getAllAppointments")
+	private List<Appointment> getAllAppointments() {
+		return (List<Appointment>) appointmentRepository.findAll();
+
 	}
+
+	@GetMapping("getAppointment/{id}")
+	private Optional<Appointment> getAppointmentById(@PathVariable int id) {
+		return appointmentRepository.findById(id);
+	}
+
+
 	}
 	
 
